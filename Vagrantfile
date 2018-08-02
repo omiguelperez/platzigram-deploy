@@ -23,10 +23,10 @@ Vagrant.configure("2") do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # NOTE: This will enable public access to the opened port
-  config.vm.network "forwarded_port", guest: 80, host: 8000
-  config.vm.network "forwarded_port", guest: 8080, host: 8081
-  config.vm.network "forwarded_port", guest: 28015, host: 28016
-  config.vm.network "forwarded_port", guest: 29015, host: 29016
+  config.vm.network "forwarded_port", guest: 80,  host: 8000
+  config.vm.network "forwarded_port", guest: 8080,  host: 8085
+  config.vm.network "forwarded_port", guest: 28015, host: 28015
+  config.vm.network "forwarded_port", guest: 29015, host: 29015
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine and only allow access
@@ -57,7 +57,7 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
 
     # Customize the amount of memory on the VM:
-    vb.memory = "1024"
+    vb.memory = "2048"
   end
   #
   # View the documentation for the provider you are using for more
@@ -66,8 +66,16 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    export DEBIAN_FRONTEND=noninteractive;
+    # Add RethinkDB Source
+    apt-key adv --fetch-keys http://download.rethinkdb.com/apt/pubkey.gpg 2>&1;
+    echo "deb http://download.rethinkdb.com/apt $(lsb_release -sc) main" > /etc/apt/sources.list.d/rethinkdb.list;
+    apt-get update --assume-yes;
+    # RethinkDB Install & Setup
+    apt-get install --assume-yes rethinkdb;
+    sed -e 's/# bind=127.0.0.1/bind=all/g' /etc/rethinkdb/default.conf.sample > /etc/rethinkdb/instances.d/default.conf;
+    rethinkdb create -d /var/lib/rethinkdb/instances.d/default 2>&1;
+    service rethinkdb start;
+  SHELL
 end

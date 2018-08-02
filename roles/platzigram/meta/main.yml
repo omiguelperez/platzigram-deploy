@@ -1,5 +1,4 @@
 ---
 dependencies:
 - { role: jdauphant.nginx }
-- { role: zenoamaro.rethinkdb }
 - { role: nodesource.node }
