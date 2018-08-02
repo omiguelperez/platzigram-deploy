@@ -1,0 +1,6 @@
+---
+- include: deps.yml
+- name: "Restarting RethinkDB"
+  service:
+    name=rethinkdb
+    state=restarted

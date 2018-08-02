@@ -1,0 +1,7 @@
+---
+- hosts: platzigram_*
+  pre_tasks:
+    - name: Update apt repository
+      apt: update_cache=yes
+  roles:
+    - platzigram
