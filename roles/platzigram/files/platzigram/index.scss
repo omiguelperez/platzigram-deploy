@@ -1,0 +1,315 @@
+@import 'node_modules/materialize-css/sass/materialize.scss';
+@import './loader.scss';
+
+$secondary-color: #125688;
+$platzigram-blue: #125688;
+$platzigram-red: #f44336;
+$avatar-size: 48px;
+
+@mixin prefix($property, $value, $vendors: webkit mox ms o) {
+  @if $vendors {
+    @each $vendor in $vendors {
+      #{'-' + $vendor + '-' + $property}: #{$value}; 
+    }
+  }
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('fonts/Montserrat-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'OleoScript';
+  src: url('fonts/OleoScript-Regular.ttf');
+}
+
+body {
+  background: #fafafa;
+  color: $secondary-color;
+  font-family: 'Montserrat';
+}
+
+$webcam-width: 640px;
+$webcam-height: 480px;
+
+#camera-modal {
+  width: $webcam-width !important;
+
+  #camera-input,
+  #webcam-preview,
+  .modal-content {
+    height: $webcam-height;
+    width: $webcam-width;
+  }
+
+  .modal-content {
+    padding: 0 !important;
+  }
+
+  .modal-footer {
+    text-align: center;
+
+    a {
+      color: $platzigram-blue;
+    }
+  }
+}
+
+#main-container {
+  margin: 0 auto;
+}
+
+.picture-card  {
+  .card-title {
+    display: inline-block !important;
+  }
+
+  .card-image {
+    position: relative;
+
+    .fa-heart {
+      color: $platzigram-red;
+      display: none;
+      font-size: 4em;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      top: 50%;
+
+      &.liked-heart {
+        display: block;
+        font-size: 12em;
+        transition: all .9s ease;
+      }
+    }
+  }
+}
+
+.avatar {
+  border-radius: 50%;
+  float: left;
+  height: $avatar-size;
+  margin-right: 12px;
+  width: $avatar-size;
+}
+
+.username {
+  color: $secondary-color;
+  line-height: $avatar-size;
+}
+
+.card small.time {
+  line-height: 54px;
+}
+
+.card p {
+  padding: 18px 0 28px 0;
+}
+
+.card .likes {
+  line-height: 30px;
+  margin-left: 12px;
+}
+
+.card i {
+  font-size: 30px;
+
+  &.fa-heart-o {
+    color: $secondary-color;
+  }
+
+  &.fa-heart {
+    color: $platzigram-red;
+    display: none;
+  }
+}
+
+.picture-card.liked .likes-container {
+  .fa-heart {
+    display: block;
+  }
+
+  .fa-heart-o {
+    display: none;
+  }
+}
+
+.header {
+  background-color: white;
+  border-bottom: 1px solid #edeeee;
+  box-shadow: none;
+  color: $secondary-color;
+}
+
+.header i.fa {
+  line-height: $avatar-size;
+}
+
+.iphone {
+  width: 100%;
+}
+
+.landing {
+  margin: 30px auto;
+}
+
+.platzigram {
+  color: $secondary-color !important;
+  font-family: 'OleoScript';
+  font-size: 42px;
+}
+
+.signup-form {
+  width: 65%;
+  margin: 0 auto;
+}
+
+.signup-form h2 {
+  color: #a5a7aa;
+  font-size: 1.2em;
+}
+
+.signup-form .btn.btn-fb {
+  background-color: #4990db;
+  font-size: .8em;
+}
+
+.signup-form .btn.btn-fb:hover {
+  background-color: #2d6599;
+}
+
+.signup-form .btn.btn-signup {
+  background-color: #125688;
+}
+
+.site-footer {
+  text-transform: uppercase;
+}
+
+.login-box,
+.signup-box {
+  background-color: white;
+  border: 1px solid #edeeee;
+  border-radius: 3px;
+  padding: 10px 0;
+  text-align: center;
+}
+
+.timeline {
+  padding: 30px 0;
+}
+
+.form-upload {
+  a {
+    background: $platzigram-blue;
+
+    &:hover {
+      background: $platzigram-blue;
+      opacity: .9;
+    }
+  }
+
+  a, span, button {
+    color: white;
+  }
+
+  button {
+    padding: 0 2em !important;
+  }
+
+  .fileUpload {
+    overflow: hidden;
+    position: relative;
+
+    input {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0;
+      padding: 0;
+      font-size: 20px;
+      cursor: pointer;
+      opacity: 0;
+      filter: alpha(opacity=0);
+    }
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .user-page .profile {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.user-page {
+  margin-top: 30px;
+
+  .heading {
+    margin-bottom: 20px;
+  }
+
+  .picture-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    margin-bottom: 20px;
+    position: relative;
+
+    &:hover {
+      .picture {
+        @include prefix(filter, blur(5px) grayscale(100%));
+      }
+
+      .likes {
+        display: flex;
+      }
+    }
+
+    .picture {
+      display: block;
+      margin-bottom: 20px;
+      max-height: 100%;
+      max-width: 100%;
+    }
+
+    .likes {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      text-align: center;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      color: $platzigram-red;
+      font-size: 34px;
+    }
+  }
+}
+
+.user-page .modal {
+  background: transparent !important;
+  left: 50% !important;
+  line-height: 0.7 !important;
+  max-width: 700px !important;
+  overflow-y: hidden;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  width: auto !important;
+
+  .modal-content {
+    margin: 0 !important;
+    padding: 0 !important;
+    right: auto !important;
+    width: auto !important;
+  }
+
+  .modal-picture-container img {
+     height: -webkit-fill-available
+  }
+}

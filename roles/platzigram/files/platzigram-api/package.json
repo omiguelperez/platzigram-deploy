@@ -1,0 +1,51 @@
+{
+  "name": "platzigram-api",
+  "version": "1.0.0",
+  "description": "Platzigram REST API",
+  "scripts": {
+    "lint": "standard",
+    "test": "npm run lint -- --fix && NODE_ENV=test ava test/**-test.js",
+    "pictures": "micro -p 5000 pictures.js",
+    "users": "micro -p 5001 users.js",
+    "auth": "micro -p 5002 auth.js"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "ava": {
+    "require": [
+      "babel-register"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omiguelperez/platzigram-api.git"
+  },
+  "author": "Oscar Pérez <mr.omiguelperez@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omiguelperez/platzigram-api/issues"
+  },
+  "homepage": "https://github.com/omiguelperez/platzigram-api#readme",
+  "devDependencies": {
+    "ava": "^0.25.0",
+    "babel-eslint": "^8.2.6",
+    "babel-register": "^6.26.0",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
+    "standard": "^11.0.1",
+    "test-listen": "^1.1.0"
+  },
+  "dependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "gravatar": "^1.6.0",
+    "http-hash": "^2.0.0",
+    "jsonwebtoken": "^8.3.0",
+    "micro": "^9.3.2",
+    "platzigram-db": "file:../platzigram-db",
+    "token-extractor": "^0.1.6",
+    "uuid-base62": "^0.1.0"
+  }
+}

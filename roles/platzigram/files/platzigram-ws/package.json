@@ -1,0 +1,31 @@
+{
+  "name": "platzigram-ws",
+  "version": "1.0.0",
+  "description": "Platzigram Realtime Backend",
+  "main": "server.js",
+  "scripts": {
+    "lint": "standard",
+    "start": "npm run lint && node server.js"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omiguelperez/platzigram-ws.git"
+  },
+  "author": "Oscar Pérez <mr.omiguelperez@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omiguelperez/platzigram-ws/issues"
+  },
+  "homepage": "https://github.com/omiguelperez/platzigram-ws#readme",
+  "dependencies": {
+    "rethinkdb": "^2.3.3",
+    "socket.io": "^2.1.1"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.6",
+    "standard": "^11.0.1"
+  }
+}
