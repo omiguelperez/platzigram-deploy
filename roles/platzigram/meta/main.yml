@@ -1,4 +1,3 @@
 ---
 dependencies:
 - { role: jdauphant.nginx }
-- { role: nodesource.node }

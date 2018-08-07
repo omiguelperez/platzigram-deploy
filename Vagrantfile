@@ -77,5 +77,8 @@ Vagrant.configure("2") do |config|
     sed -e 's/# bind=127.0.0.1/bind=all/g' /etc/rethinkdb/default.conf.sample > /etc/rethinkdb/instances.d/default.conf;
     rethinkdb create -d /var/lib/rethinkdb/instances.d/default 2>&1;
     service rethinkdb start;
+    # Install Node.js
+    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -;
+    apt-get install --assume-yes nodejs;
   SHELL
 end
