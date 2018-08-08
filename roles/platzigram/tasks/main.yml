@@ -68,7 +68,7 @@
     line: bind=all
 
 - name: Enable rethinkdb service
-  tags: rethinkdb, restart
+  tags: rethinkdb
   service: 
     name: rethinkdb
     state: started
@@ -99,7 +99,7 @@
     chdir="/opt/platzigram"
 
 - name: Installing upstart scripts
-  tags: app
+  tags: app,services
   copy:
     src: "upstart/{{ item }}.conf"
     dest: /etc/init
@@ -107,9 +107,26 @@
   with_items: "{{ services }}"
 
 - name: Running Platzigram services
-  tags: app
+  tags: app,services
   service:
     name: "{{ item }}"
     state: restarted
     enabled: yes
   with_items: "{{ services }}"
+
+- name: Copying NIGNX config file
+  tags: app,nginx
+  copy:
+    src: "nginx/{{ item }}"
+    dest: "/etc/nginx/sites-enabled/{{ item }}"
+    mode: u=r,g=r,o=r
+  with_items:
+    - platzigram.conf
+    - platzigram-ws.conf
+    - platzigram-api.conf
+
+- name: Restarting NGINX
+  tags: app,nginx
+  service:
+    name: nginx
+    state: reloaded
