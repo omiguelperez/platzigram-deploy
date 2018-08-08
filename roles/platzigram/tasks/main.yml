@@ -98,3 +98,18 @@
   command: bash -c "npm run build"
     chdir="/opt/platzigram"
 
+- name: Installing upstart scripts
+  tags: app
+  copy:
+    src: "upstart/{{ item }}.conf"
+    dest: /etc/init
+    mode: u=r,g=r
+  with_items: "{{ services }}"
+
+- name: Running Platzigram services
+  tags: app
+  service:
+    name: "{{ item }}"
+    state: restarted
+    enabled: yes
+  with_items: "{{ services }}"
