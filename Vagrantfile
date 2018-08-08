@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  # config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.33.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -67,18 +67,6 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-    export DEBIAN_FRONTEND=noninteractive;
-    # Add RethinkDB Source
-    apt-key adv --fetch-keys http://download.rethinkdb.com/apt/pubkey.gpg 2>&1;
-    echo "deb http://download.rethinkdb.com/apt $(lsb_release -sc) main" > /etc/apt/sources.list.d/rethinkdb.list;
-    apt-get update --assume-yes;
-    # RethinkDB Install & Setup
-    apt-get install --assume-yes rethinkdb;
-    sed -e 's/# bind=127.0.0.1/bind=all/g' /etc/rethinkdb/default.conf.sample > /etc/rethinkdb/instances.d/default.conf;
-    rethinkdb create -d /var/lib/rethinkdb/instances.d/default 2>&1;
-    service rethinkdb start;
-    # Install Node.js
-    curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -;
-    apt-get install --assume-yes nodejs;
+    # apt-get update;
   SHELL
 end

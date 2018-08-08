@@ -1,29 +1,100 @@
 ---
 - include: deps.yml
 
-- name: "Restarting RethinkDB"
-  service:
-    name=rethinkdb
-    state=restarted
-    
-- name: "Copying Projects"
+- name: nodejs - add repository key
+  tags: nodejs
+  apt_key:
+    url: "{{ item }}"
+  with_items:
+    - "http://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    - "https://dl.yarnpkg.com/debian/pubkey.gpg"
+
+- name: nodejs - add repository
+  tags: nodejs
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - "deb http://deb.nodesource.com/node_8.x {{ ansible_lsb.codename }} main"
+    - "deb-src http://deb.nodesource.com/node_8.x {{ ansible_lsb.codename }} main"
+    - "deb https://dl.yarnpkg.com/debian/ stable main"
+
+- name: nodejs - install
+  tags: nodejs
+  apt:
+    name: "{{ item }}"
+    state: "present"
+  with_items:
+    - "nodejs"
+    - "yarn"
+
+- name: nodejs - fix, operation not permitted
+  tags: nodejs
+  replace:
+    dest: "/usr/lib/node_modules/npm/node_modules/node-gyp/gyp/pylib/gyp/generator/make.py"
+    regexp: "copy_archive_arguments = '-af'"
+    replace: "copy_archive_arguments = '-PRf'"
+    backup: "yes"
+
+- name: Add sources file
+  tags: rethinkdb
+  file: path=/etc/apt/sources.list.d/rethinkdb.list state=touch
+
+- name: Add repository
+  tags: rethinkdb
+  lineinfile: dest=/etc/apt/sources.list.d/rethinkdb.list line="deb http://download.rethinkdb.com/apt precise main"
+
+- name: Add key
+  tags: rethinkdb
+  apt_key: url=http://download.rethinkdb.com/apt/pubkey.gpg state=present
+
+- name: Install Rethinkdb
+  tags: rethinkdb
+  apt: name=rethinkdb state=present update_cache=yes
+
+- name: Copy rethinkdb configuration file
+  tags: rethinkdb
   copy:
-    src="{{ item }}"
-    dest=/opt/
-    mode=u=r,g=r
+    src: /etc/rethinkdb/default.conf.sample
+    dest: /etc/rethinkdb/instances.d/default.conf
+    mode: u=rw,g=r,o=r
+
+- name: Local interfaces listen all address
+  tags: rethinkdb
+  lineinfile:
+    path: /etc/rethinkdb/instances.d/default.conf
+    regexp: bind=
+    line: bind=all
+
+- name: Enable rethinkdb service
+  tags: rethinkdb, restart
+  service: 
+    name: rethinkdb
+    state: started
+    
+- name: Copying Projects
+  tags: app
+  copy:
+    src: "{{ item }}"
+    dest: /opt/
+    mode: u=rwx,g=rwx,o=rwx
   with_items: "{{ projects }}"
   
-- name: "Running npm install"
-  command: bash -c "npm install || npm install"
+- name: Running npm install
+  tags: app
+  command: bash -c "npm install --unsafe-perm || npm install --unsafe-perm"
     chdir="/opt/{{ item }}"
     creates="/opt/{{ item }}/node_modules"
   with_items: "{{ projects }}"
-  
-- name: "Setting up database"
+
+- name: Setting up database
+  tags: app
   command: bash -c "node setup.js"
     chdir="/opt/platzigram-db"
 
-- name: "Build Platzigram Project"
+- name: Build Platzigram Project
+  tags: app
   command: bash -c "npm run build"
     chdir="/opt/platzigram"
 
